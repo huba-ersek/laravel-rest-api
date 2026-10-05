@@ -19,7 +19,7 @@ class UsersController extends Controller
         ]);
 
         $user = User::where('email', $email)->first();
-        if (!$user || Hash::check($password, $password ? $user->password : '')) {
+        if (!$user || !Hash::check($password, $password ? $user->password : '')) {
             return response()->json([
                 'message' => 'Invalid email or password'
             ], 401);
