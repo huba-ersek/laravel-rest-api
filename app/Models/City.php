@@ -15,6 +15,10 @@ class City extends Model
         'population',
     ];
 
+    protected $hidden = [
+        'county_id',
+    ];
+
     public function county()
     {
         return $this->belongsTo(County::class);
