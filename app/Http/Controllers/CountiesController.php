@@ -28,7 +28,7 @@ class CountiesController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'arms' => 'required',
+            'arms' => 'required|url:http,https',
         ]);
         $county = County::create($request->all());
         return response()->json(compact('county'));
