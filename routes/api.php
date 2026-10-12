@@ -16,3 +16,4 @@ Route::post('/counties', [CountiesController::class, 'store'])->middleware('auth
 Route::post('/cities', [CitiesController::class, 'store'])->middleware('auth:sanctum');
 
 Route::put('/counties/{id}', [CountiesController::class, 'update'])->middleware('auth:sanctum');
+Route::put('/cities/{id}', [CitiesController::class, 'update'])->middleware('auth:sanctum');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\City;
+use App\Http\Requests\CityRequest;
 
 class CitiesController extends Controller
 {
@@ -29,15 +30,16 @@ class CitiesController extends Controller
         return response()->json(compact('cities'));
     }
 
-    public function store(Request $request)
+    public function store(CityRequest $request)
     {
-        $request->validate([
-            'zip_code' => 'required|integer|min:1000|max:9999',
-            'city' => 'required|min:1',
-            'county_id' => 'required|exists:counties,id',
-            'population' => 'required|integer|min:0',
-        ]);
         $city = City::create($request->all());
+        return response()->json(compact('city'));
+    }
+
+    public function update(CityRequest $request, $id)
+    {
+        $city = City::findOrFail($id);
+        $city->update($request->all());
         return response()->json(compact('city'));
     }
 }
