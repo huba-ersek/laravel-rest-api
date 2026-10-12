@@ -23,7 +23,7 @@ class CityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'zip_code' => 'required|integer|min:1000|max:9999',
+            'zip_code' => 'required|integer|digits:4',
             'city' => 'required|min:1',
             'county_id' => 'required|exists:counties,id',
             'population' => 'required|integer|min:0',
