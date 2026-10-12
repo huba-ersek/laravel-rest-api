@@ -6,3 +6,5 @@
 |/counties|GET|||
 |/cities|POST|Y||
 |/counties|POST|Y||
+|/cities|PUT|Y||
+|/counties|PUT|Y||
