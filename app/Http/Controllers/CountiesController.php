@@ -27,7 +27,7 @@ class CountiesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|min:1',
             'arms' => 'required|url:http,https',
         ]);
         $county = County::create($request->all());
