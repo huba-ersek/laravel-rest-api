@@ -1,0 +1,23 @@
+info:
+  name: post_users_login
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: localhost:9090/api/users/login
+  body:
+    type: json
+    data: |-
+      {
+        "email": "admin@admin.com",
+        "password": "admin"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

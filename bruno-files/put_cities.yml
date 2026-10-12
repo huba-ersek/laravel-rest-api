@@ -1,0 +1,27 @@
+info:
+  name: put_cities
+  type: http
+  seq: 8
+
+http:
+  method: PUT
+  url: localhost:9090/api/cities/3575
+  body:
+    type: json
+    data: |-
+      {
+        "zip_code": 6969,
+        "city": "Város",
+        "population": 420,
+        "county_id": 21
+      }
+  auth:
+    type: bearer
+    token: 4|hN6MrOX7Nxj0qm11skgJzzg0T0UHFaYYUeEXlbc189ea5524
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

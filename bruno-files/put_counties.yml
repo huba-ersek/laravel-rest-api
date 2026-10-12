@@ -1,0 +1,25 @@
+info:
+  name: put_counties
+  type: http
+  seq: 7
+
+http:
+  method: PUT
+  url: localhost:9090/api/counties/21
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Megyenév",
+        "arms": "https://kep.cdn.indexvas.hu/1/0/3495/34959/349592/34959223_828db65435dcf29c21b1727d4264ae33_wm.jpg"
+      }
+  auth:
+    type: bearer
+    token: 4|hN6MrOX7Nxj0qm11skgJzzg0T0UHFaYYUeEXlbc189ea5524
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

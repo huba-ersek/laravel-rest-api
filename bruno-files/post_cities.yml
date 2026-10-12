@@ -1,0 +1,27 @@
+info:
+  name: post_cities
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: localhost:9090/api/cities
+  body:
+    type: json
+    data: |-
+      {
+        "zip_code": 6969,
+        "city": "Város",
+        "population": 67,
+        "county_id": 21
+      }
+  auth:
+    type: bearer
+    token: 4|hN6MrOX7Nxj0qm11skgJzzg0T0UHFaYYUeEXlbc189ea5524
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

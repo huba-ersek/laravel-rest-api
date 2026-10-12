@@ -1,0 +1,18 @@
+info:
+  name: delete_counties
+  type: http
+  seq: 9
+
+http:
+  method: DELETE
+  url: localhost:9090/api/counties/21
+  auth:
+    type: bearer
+    token: 4|hN6MrOX7Nxj0qm11skgJzzg0T0UHFaYYUeEXlbc189ea5524
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
