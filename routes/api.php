@@ -13,3 +13,4 @@ Route::get('/counties', [CountiesController::class, 'index']);
 Route::get('/cities', [CitiesController::class, 'index']);
 
 Route::post('/counties', [CountiesController::class, 'store'])->middleware('auth:sanctum');
+Route::post('/cities', [CitiesController::class, 'store'])->middleware('auth:sanctum');
