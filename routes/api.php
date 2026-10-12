@@ -19,3 +19,4 @@ Route::put('/counties/{id}', [CountiesController::class, 'update'])->middleware(
 Route::put('/cities/{id}', [CitiesController::class, 'update'])->middleware('auth:sanctum');
 
 Route::delete('/counties/{id}', [CountiesController::class, 'destroy'])->middleware('auth:sanctum');
+Route::delete('/cities/{id}', [CitiesController::class, 'destroy'])->middleware('auth:sanctum');

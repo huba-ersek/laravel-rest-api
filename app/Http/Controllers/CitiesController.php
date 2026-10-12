@@ -42,4 +42,11 @@ class CitiesController extends Controller
         $city->update($request->all());
         return response()->json(compact('city'));
     }
+
+    public function destroy($id)
+    {
+        $city = City::findOrFail($id);
+        $city->delete();
+        return response()->json(compact('city'));
+    }
 }
