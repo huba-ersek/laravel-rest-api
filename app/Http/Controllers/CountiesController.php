@@ -34,7 +34,8 @@ class CountiesController extends Controller
         return response()->json(compact('county'));
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $request->validate([
             'name' => 'required|min:1',
             'arms' => 'required|url:http,https',
