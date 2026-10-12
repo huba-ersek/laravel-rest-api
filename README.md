@@ -8,3 +8,5 @@
 |/counties|POST|Y||
 |/cities|PUT|Y||
 |/counties|PUT|Y||
+|/cities|DELETE|Y||
+|/counties|DELETE|Y||
