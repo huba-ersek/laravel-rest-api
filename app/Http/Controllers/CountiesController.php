@@ -44,4 +44,11 @@ class CountiesController extends Controller
         $county->update($request->all());
         return response()->json(compact('county'));
     }
+
+    public function destroy($id)
+    {
+        $county = County::findOrFail($id);
+        $county->delete();
+        return response()->json(compact('county'));
+    }
 }

@@ -17,3 +17,5 @@ Route::post('/cities', [CitiesController::class, 'store'])->middleware('auth:san
 
 Route::put('/counties/{id}', [CountiesController::class, 'update'])->middleware('auth:sanctum');
 Route::put('/cities/{id}', [CitiesController::class, 'update'])->middleware('auth:sanctum');
+
+Route::delete('/counties/{id}', [CountiesController::class, 'destroy'])->middleware('auth:sanctum');
