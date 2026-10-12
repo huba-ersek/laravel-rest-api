@@ -11,3 +11,5 @@ Route::post('/users/login', [UsersController::class, 'login']);
 Route::get('/users', [UsersController::class, 'index'])->middleware('auth:sanctum');
 Route::get('/counties', [CountiesController::class, 'index']);
 Route::get('/cities', [CitiesController::class, 'index']);
+
+Route::post('/counties', [CountiesController::class, 'store'])->middleware('auth:sanctum');

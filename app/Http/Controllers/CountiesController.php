@@ -23,4 +23,14 @@ class CountiesController extends Controller
             ->get();
         return response()->json(compact('counties'));
     }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'arms' => 'required',
+        ]);
+        $county = County::create($request->all());
+        return response()->json(compact('county'));
+    }
 }
