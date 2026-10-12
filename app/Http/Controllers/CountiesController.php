@@ -33,4 +33,14 @@ class CountiesController extends Controller
         $county = County::create($request->all());
         return response()->json(compact('county'));
     }
+
+    public function update(Request $request, $id) {
+        $request->validate([
+            'name' => 'required|min:1',
+            'arms' => 'required|url:http,https',
+        ]);
+        $county = County::findOrFail($id);
+        $county->update($request->all());
+        return response()->json(compact('county'));
+    }
 }
