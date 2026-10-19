@@ -242,7 +242,9 @@ class CitiesController extends Controller
             ->when($name, function (Builder $query, string $name) {
                 $query->where('city', 'LIKE', '%' . $name . '%');
             })
-            ->where('county_id', '=', $countyId)
+            ->when($countyId, function (Builder $query, string $countyId) {
+                $query->where('county_id', '=', $countyId);
+            })
             ->with('county')
             ->orderBy('city')
             ->get();
