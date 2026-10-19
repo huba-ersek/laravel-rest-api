@@ -1,0 +1,7 @@
+{
+    "name": "Postoffice API",
+    "version": "1.0.0",
+    "description": "RESTful API for retrieving ZIP code information.",
+    "title": "ZIP API documentation",
+    "url": "http://localhost:9090"
+}
