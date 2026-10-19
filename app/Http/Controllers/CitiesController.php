@@ -8,29 +8,16 @@ use App\Models\City;
 use App\Http\Requests\CityRequest;
 
 /**
- * @apiDefine City
+ * @apiDefine CityValidationError
  *
- * @apiSuccess {Object} city The city resource.
- * @apiSuccess {Integer} city.id The unique city identifier.
- * @apiSuccess {Integer} city.zip_code The four-digit postal code.
- * @apiSuccess {String} city.city The city name.
- * @apiSuccess {Integer} city.county_id The associated county identifier.
- * @apiSuccess {Integer} city.population The city population.
- */
-
-/**
- * @apiDefine ValidationError
+ * @apiError (422) UnprocessableEntity Request validation failed.
  *
- * @apiError (400) ValidationError The request contains invalid data.
- *
- * @apiErrorExample {json} Validation error response:
- * HTTP/1.1 422 Unprocessable Content
+ * @apiErrorExample {json} Validation error:
+ * HTTP/1.1 422 Unprocessable Entity
  * {
  *   "message": "The given data was invalid.",
  *   "errors": {
- *     "zip_code": [
- *       "The zip code field is required."
- *     ]
+ *     "zip_code": ["The zip code field is required."]
  *   }
  * }
  */
@@ -41,27 +28,22 @@ use App\Http\Requests\CityRequest;
  * @apiGroup Cities
  * @apiVersion 1.0.0
  *
- * @apiDescription Returns cities filtered by the supplied parameters.
- * Results are ordered alphabetically by city name. Each city includes
- * its related county, provided the City model relationship is configured.
+ * @apiDescription Returns cities filtered by county ID and optionally
+ * by city ID or partial city name. Results are ordered by city name.
  *
- * The county_id parameter is applied unconditionally by the controller.
- * Supply it to retrieve cities belonging to a specific county.
- *
- * @apiQuery {Integer} county_id County identifier. Required by the
- * controller query to obtain matching results.
+ * @apiQuery {Integer} county_id County identifier used to filter results.
  * @apiQuery {Integer} [id] Filter by exact city ID.
- * @apiQuery {String} [name] Filter by a partial city name match.
+ * @apiQuery {String} [name] Filter by partial city name.
  *
- * @apiSuccess {Object[]} cities List of matching cities.
+ * @apiSuccess {Object[]} cities Matching city resources.
  * @apiSuccess {Integer} cities.id City identifier.
- * @apiSuccess {Integer} cities.zip_code Postal code.
+ * @apiSuccess {Integer} cities.zip_code Four-digit postal code.
  * @apiSuccess {String} cities.city City name.
  * @apiSuccess {Integer} cities.county_id County identifier.
  * @apiSuccess {Integer} cities.population Population.
  * @apiSuccess {Object} cities.county Related county object.
  *
- * @apiSuccessExample {json} Success response:
+ * @apiSuccessExample {json} Success:
  * HTTP/1.1 200 OK
  * {
  *   "cities": [
@@ -73,16 +55,20 @@ use App\Http\Requests\CityRequest;
  *       "population": 25000,
  *       "county": {
  *         "id": 2,
- *         "name": "Example County"
+ *         "name": "Example County",
+ *         "arms": "https://example.com/arms.png"
  *       }
  *     }
  *   ]
  * }
  *
- * Note: The county object's exact structure depends on the County model.
+ * Note: The county object structure is illustrative and depends on
+ * the County model.
  *
  * @apiExample {curl} Example request:
- * curl -X GET "https://example.com/api/cities?county_id=2&name=Example"
+ * curl -X GET \
+ *   "https://example.com/api/cities?county_id=2&name=Example" \
+ *   -H "Accept: application/json"
  */
 
 /**
@@ -91,17 +77,25 @@ use App\Http\Requests\CityRequest;
  * @apiGroup Cities
  * @apiVersion 1.0.0
  *
- * @apiDescription Creates a city using the submitted request data.
- * The request is validated by CityRequest before the city is created.
+ * @apiDescription Creates a city. Sanctum authentication is required.
+ *
+ * @apiHeader {String} Authorization Sanctum bearer token.
+ * @apiHeaderExample {String} Authorization header:
+ * Authorization: Bearer YOUR_ACCESS_TOKEN
  *
  * @apiBody {Integer} zip_code Four-digit postal code. Required.
  * @apiBody {String} city City name. Required; minimum length 1.
  * @apiBody {Integer} county_id Existing county ID. Required.
- * @apiBody {Integer} population Population. Required; minimum value 0.
+ * @apiBody {Integer} population Population. Required; minimum 0.
  *
- * @apiUse City
+ * @apiSuccess {Object} city Created city resource.
+ * @apiSuccess {Integer} city.id City identifier.
+ * @apiSuccess {Integer} city.zip_code Postal code.
+ * @apiSuccess {String} city.city City name.
+ * @apiSuccess {Integer} city.county_id County identifier.
+ * @apiSuccess {Integer} city.population Population.
  *
- * @apiSuccessExample {json} Success response:
+ * @apiSuccessExample {json} Success:
  * HTTP/1.1 200 OK
  * {
  *   "city": {
@@ -113,10 +107,18 @@ use App\Http\Requests\CityRequest;
  *   }
  * }
  *
- * @apiUse ValidationError
+ * @apiError (401) Unauthorized Missing or invalid authentication token.
+ * @apiErrorExample {json} Unauthenticated:
+ * HTTP/1.1 401 Unauthorized
+ * {
+ *   "message": "Unauthenticated."
+ * }
+ *
+ * @apiUse CityValidationError
  *
  * @apiExample {curl} Example request:
  * curl -X POST "https://example.com/api/cities" \
+ *   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
  *   -H "Content-Type: application/json" \
  *   -H "Accept: application/json" \
  *   -d '{
@@ -133,20 +135,28 @@ use App\Http\Requests\CityRequest;
  * @apiGroup Cities
  * @apiVersion 1.0.0
  *
- * @apiDescription Updates an existing city. All fields defined by
- * CityRequest are required, including when updating only one field.
- * Returns a 404 response if the city does not exist.
+ * @apiDescription Updates an existing city. Sanctum authentication
+ * is required. All validated fields must be provided.
+ *
+ * @apiHeader {String} Authorization Sanctum bearer token.
+ * @apiHeaderExample {String} Authorization header:
+ * Authorization: Bearer YOUR_ACCESS_TOKEN
  *
  * @apiParam {Integer} id City identifier.
  *
  * @apiBody {Integer} zip_code Four-digit postal code. Required.
  * @apiBody {String} city City name. Required; minimum length 1.
  * @apiBody {Integer} county_id Existing county ID. Required.
- * @apiBody {Integer} population Population. Required; minimum value 0.
+ * @apiBody {Integer} population Population. Required; minimum 0.
  *
- * @apiUse City
+ * @apiSuccess {Object} city Updated city resource.
+ * @apiSuccess {Integer} city.id City identifier.
+ * @apiSuccess {Integer} city.zip_code Postal code.
+ * @apiSuccess {String} city.city City name.
+ * @apiSuccess {Integer} city.county_id County identifier.
+ * @apiSuccess {Integer} city.population Population.
  *
- * @apiSuccessExample {json} Success response:
+ * @apiSuccessExample {json} Success:
  * HTTP/1.1 200 OK
  * {
  *   "city": {
@@ -158,12 +168,13 @@ use App\Http\Requests\CityRequest;
  *   }
  * }
  *
- * @apiUse ValidationError
- *
+ * @apiError (401) Unauthorized Missing or invalid authentication token.
  * @apiError (404) NotFound The specified city does not exist.
+ * @apiUse CityValidationError
  *
  * @apiExample {curl} Example request:
  * curl -X PUT "https://example.com/api/cities/1" \
+ *   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
  *   -H "Content-Type: application/json" \
  *   -H "Accept: application/json" \
  *   -d '{
@@ -180,19 +191,23 @@ use App\Http\Requests\CityRequest;
  * @apiGroup Cities
  * @apiVersion 1.0.0
  *
- * @apiDescription Deletes the specified city and returns the deleted
- * model as JSON. Returns a 404 response if the city does not exist.
+ * @apiDescription Deletes a city and returns the deleted model.
+ * Sanctum authentication is required.
+ *
+ * @apiHeader {String} Authorization Sanctum bearer token.
+ * @apiHeaderExample {String} Authorization header:
+ * Authorization: Bearer YOUR_ACCESS_TOKEN
  *
  * @apiParam {Integer} id City identifier.
  *
- * @apiSuccess {Object} city The deleted city resource.
+ * @apiSuccess {Object} city Deleted city resource.
  * @apiSuccess {Integer} city.id City identifier.
  * @apiSuccess {Integer} city.zip_code Postal code.
  * @apiSuccess {String} city.city City name.
  * @apiSuccess {Integer} city.county_id County identifier.
  * @apiSuccess {Integer} city.population Population.
  *
- * @apiSuccessExample {json} Success response:
+ * @apiSuccessExample {json} Success:
  * HTTP/1.1 200 OK
  * {
  *   "city": {
@@ -204,10 +219,12 @@ use App\Http\Requests\CityRequest;
  *   }
  * }
  *
+ * @apiError (401) Unauthorized Missing or invalid authentication token.
  * @apiError (404) NotFound The specified city does not exist.
  *
  * @apiExample {curl} Example request:
  * curl -X DELETE "https://example.com/api/cities/1" \
+ *   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
  *   -H "Accept: application/json"
  */
 
